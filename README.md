@@ -11,7 +11,7 @@ TraceLens is a small Python command-line toolkit for **passive DNS research and 
 - Stores timestamped observations in a local SQLite database.
 - Adds sourced manual notes with an explicit confidence label.
 - Displays observation history and exports Markdown/JSON reports.
-- Includes automated tests with a fake DNS resolver; tests do not require network access.
+- Includes automated tests for validation, storage, reporting, and collector settings; tests do not require network access.
 
 ## Requirements
 
