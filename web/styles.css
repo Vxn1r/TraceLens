@@ -261,11 +261,11 @@ h1 em { color: var(--accent); font-style: normal; }
   .nav-item, .nav-item:not(.active) { display: flex; min-height: 45px; border-radius: 4px; }
   .nav-icon { width: auto; font-size: 17px; }
   .main { margin: 0; padding: 0 14px 75px; }
-  .topbar { height: 54px; }
+  .topbar { height: auto; min-height: 54px; flex-wrap: wrap; gap: 8px; padding: 9px 0; }
   .breadcrumb { font-size: 8px; }
-  .mode-pill { padding: 5px 6px; font-size: 7px; }
-  .topbar-right { gap: 7px; }
-  .quiet-button { padding: 7px 8px; font-size: 9px; }
+  .mode-pill { display: none; }
+  .topbar-right { gap: 5px; }
+  .quiet-button { padding: 7px 8px; font-size: 8px; }
   .command-center { padding: 24px 0 20px; }
   .hero-row { align-items: flex-start; }
   h1 { font-size: 31px; letter-spacing: -1.2px; }
