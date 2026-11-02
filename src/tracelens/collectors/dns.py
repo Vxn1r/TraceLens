@@ -1,24 +1,54 @@
-"""Bounded passive DNS collector."""
+"""Bounded passive DNS collection using a system-configured resolver."""
 from __future__ import annotations
+
 import dns.exception
 import dns.resolver
+
 from tracelens.models import Observation
 
 RECORD_TYPES = ("A", "AAAA", "MX", "NS", "TXT", "CNAME")
 
-def collect_dns(domain: str, timeout: float = 3.0, lifetime: float = 10.0, resolver=None) -> list[Observation]:
-    """Collect a small fixed set of public DNS records using a bounded resolver."""
-    if timeout <= 0 or lifetime <= 0 or timeout > lifetime:
-        raise ValueError("Use positive timeouts with timeout no greater than lifetime.")
-    dns_resolver = resolver or dns.resolver.Resolver()
-    results: list[Observation] = []
-    for record_type in RECORD_TYPES:
-        try:
-            answers = dns_resolver.resolve(domain, record_type, lifetime=lifetime, raise_on_no_answer=False)
-            if answers.rrset is None:
+
+class DNSCollector:
+    """Collect a fixed set of public DNS records; never scans hosts or ports."""
+
+    def __init__(self, timeout: float = 3.0, resolver=None) -> None:
+        if timeout <= 0 or timeout > 10:
+            raise ValueError("timeout must be greater than 0 and no more than 10 seconds")
+        self.timeout = float(timeout)
+        self.resolver = resolver or dns.resolver.Resolver()
+        self.resolver.timeout = self.timeout
+        self.resolver.lifetime = min(self.timeout * 3, 10.0)
+
+    def collect(self, domain: str) -> list[Observation]:
+        observations: list[Observation] = []
+        for record_type in RECORD_TYPES:
+            try:
+                answer = self.resolver.resolve(
+                    domain,
+                    record_type,
+                    lifetime=self.resolver.lifetime,
+                    raise_on_no_answer=False,
+                )
+                if answer.rrset is None:
+                    continue
+                for record in answer:
+                    observations.append(
+                        Observation.now(
+                            target=domain,
+                            category=f"DNS {record_type}",
+                            value=record.to_text(),
+                            source="System-configured DNS resolver",
+                            method=f"DNS query: {record_type}",
+                            confidence="observed",
+                            note="Public DNS response; point-in-time observation.",
+                        )
+                    )
+            except (
+                dns.resolver.NXDOMAIN,
+                dns.resolver.NoAnswer,
+                dns.resolver.NoNameservers,
+                dns.exception.Timeout,
+            ):
                 continue
-            for answer in answers:
-                results.append(Observation.now(domain, record_type, answer.to_text()))
-        except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.exception.Timeout):
-            continue
-    return results
+        return observations
