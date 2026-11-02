@@ -39,7 +39,9 @@
       }
       state.runs = parsed.runs.slice(0, MAX_RUNS).filter((run) =>
         run && typeof run.id === "string" && typeof run.domain === "string" &&
-        Array.isArray(run.records) && typeof run.queriedAt === "string"
+        Array.isArray(run.records) && typeof run.queriedAt === "string" &&
+        run.records.every((record) => record && typeof record.type === "string" &&
+          typeof record.name === "string" && typeof record.value === "string")
       );
       state.notes = parsed.notes.slice(0, MAX_NOTES).filter((note) =>
         note && typeof note.id === "string" && typeof note.domain === "string" &&
@@ -429,13 +431,19 @@
       const text = document.createElement("p");
       text.className = "note-body";
       text.textContent = note.text;
-      const source = document.createElement("a");
+      let source;
+      try {
+        const safeSource = validateSourceUrl(note.source);
+        source = document.createElement("a");
+        source.href = safeSource;
+        source.target = "_blank";
+        source.rel = "noopener noreferrer";
+        source.textContent = safeSource;
+      } catch (_) {
+        source = document.createElement("span");
+        source.textContent = "Unsafe or invalid source URL (not linked)";
+      }
       source.className = "note-source";
-      const safeSource = validateSourceUrl(note.source);
-      source.href = safeSource;
-      source.target = "_blank";
-      source.rel = "noopener noreferrer";
-      source.textContent = safeSource;
       const date = document.createElement("div");
       date.className = "note-date";
       date.textContent = note.domain + " · " + formatDate(note.createdAt);
