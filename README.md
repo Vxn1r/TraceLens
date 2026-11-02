@@ -3,7 +3,6 @@
 **TraceLens** is an evidence-first, passive DNS research and evidence-management CLI. It collects a fixed set of public DNS record types, stores timestamped observations in SQLite, accepts sourced manual notes, and exports Markdown or JSON reports.
 
 [![Tests](https://github.com/Vxn1r/TraceLens/actions/workflows/tests.yml/badge.svg)](https://github.com/Vxn1r/TraceLens/actions/workflows/tests.yml)
-[![Latest release](https://img.shields.io/github/v/release/Vxn1r/TraceLens?display_name=tag)](https://github.com/Vxn1r/TraceLens/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > **Responsible use:** Use only with domains you own or are explicitly authorized to assess. TraceLens performs passive DNS queries only. It does not scan ports, attempt logins, exploit services, bypass access controls, or establish domain ownership.
