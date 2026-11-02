@@ -43,7 +43,8 @@
       );
       state.notes = parsed.notes.slice(0, MAX_NOTES).filter((note) =>
         note && typeof note.id === "string" && typeof note.domain === "string" &&
-        typeof note.text === "string" && typeof note.source === "string"
+        typeof note.text === "string" && typeof note.source === "string" &&
+        typeof note.createdAt === "string" && ["unverified", "low", "medium", "high"].includes(note.confidence)
       );
     } catch (error) {
       state.runs = [];
@@ -430,10 +431,11 @@
       text.textContent = note.text;
       const source = document.createElement("a");
       source.className = "note-source";
-      source.href = note.source;
+      const safeSource = validateSourceUrl(note.source);
+      source.href = safeSource;
       source.target = "_blank";
       source.rel = "noopener noreferrer";
-      source.textContent = note.source;
+      source.textContent = safeSource;
       const date = document.createElement("div");
       date.className = "note-date";
       date.textContent = note.domain + " · " + formatDate(note.createdAt);
@@ -692,6 +694,7 @@
     $("#lookupForm").addEventListener("submit", handleLookup);
     $("#noteForm").addEventListener("submit", handleNote);
     $("#exportJson").addEventListener("click", exportVault);
+    $("#exportReport").addEventListener("click", exportReport);
     $("#clearVault").addEventListener("click", clearVault);
     document.querySelectorAll("[data-view]").forEach((button) => {
       button.addEventListener("click", () => setView(button.dataset.view));
