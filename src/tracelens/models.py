@@ -1,23 +1,36 @@
-"""Shared data models for TraceLens."""
+"""Shared evidence model used by collectors, storage, and reports."""
+from __future__ import annotations
+
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+
 @dataclass(slots=True)
 class Observation:
-    domain: str
-    record_type: str
+    target: str
+    category: str
     value: str
-    observed_at: str
-    source: str = "DNS resolver"
-    method: str = "passive DNS lookup"
-    confidence: str = "observed"
+    source: str = "Unknown"
+    method: str = "Unknown"
+    confidence: str = "unverified"
+    observed_at: str = ""
     note: str = ""
+    id: int | None = None
+
+    def __post_init__(self) -> None:
+        if not self.observed_at:
+            self.observed_at = datetime.now(timezone.utc).isoformat()
 
     @classmethod
-    def now(cls, domain: str, record_type: str, value: str, **kwargs: Any) -> "Observation":
-        stamp = datetime.now(timezone.utc).isoformat()
-        return cls(domain, record_type, value, stamp, **kwargs)
+    def now(cls, target: str, category: str, value: str, **kwargs: Any) -> "Observation":
+        return cls(
+            target=target,
+            category=category,
+            value=value,
+            observed_at=datetime.now(timezone.utc).isoformat(),
+            **kwargs,
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
