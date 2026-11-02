@@ -370,9 +370,9 @@
       const x = leftSide ? 170 : 730;
       const y = 63 + column * 53;
       const line = svgElement("line", {
-        x1: centerX + (leftSide ? -70 : 70),
+        x1: centerX + (leftSide ? -54 : 54),
         y1: centerY,
-        x2: x + (leftSide ? 48 : -48),
+        x2: x,
         y2: y,
         class: "graph-edge"
       });
