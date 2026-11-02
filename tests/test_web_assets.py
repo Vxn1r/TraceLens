@@ -20,7 +20,7 @@ def test_web_app_is_passive_and_keeps_vault_in_browser():
     assert "localStorage.removeItem" in app
     assert "subdomain" in page.lower()
     assert "port" in page.lower()
-    assert "Noisy scans" in page
+    assert "no noisy scans" in page.lower()
 
 
 def test_web_app_does_not_load_remote_scripts_or_styles():
