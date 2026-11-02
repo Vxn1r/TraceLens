@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090b10">
   <meta name="description" content="TraceLens — passive domain intelligence and evidence management.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://cloudflare-dns.com https://dns.google; object-src 'none'; base-uri 'self'; form-action 'self';">
   <meta property="og:title" content="TraceLens — Domain Intelligence">
   <meta property="og:description" content="A quiet, evidence-first workspace for public DNS observations.">
   <meta property="og:type" content="website">
@@ -27,6 +28,7 @@
         <button class="nav-item" type="button" data-view="graphView"><span class="nav-icon">⌘</span> Relationship map <kbd>02</kbd></button>
         <button class="nav-item" type="button" data-view="evidenceView"><span class="nav-icon">▤</span> Evidence vault <kbd>03</kbd></button>
         <button class="nav-item" type="button" data-view="historyView"><span class="nav-icon">◷</span> Activity history <kbd>04</kbd></button>
+        <button class="nav-item" type="button" data-view="sourcesView"><span class="nav-icon">ⓘ</span> Method & limits <kbd>05</kbd></button>
       </nav>
 
       <div class="sidebar-bottom">
@@ -44,6 +46,7 @@
         <div class="breadcrumb"><span>TRACE /</span> <strong>PASSIVE INTELLIGENCE</strong></div>
         <div class="topbar-right">
           <span class="mode-pill"><i></i> PASSIVE ONLY</span>
+          <button class="quiet-button" id="exportReport" type="button">Export report <span>↓</span></button>
           <button class="quiet-button" id="exportJson" type="button">Export vault <span>↓</span></button>
         </div>
       </header>
