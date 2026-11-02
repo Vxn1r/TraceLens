@@ -167,6 +167,10 @@
     for (const resolver of RESOLVERS) {
       try {
         const result = await requestDns(resolver, domain, type);
+        if (result.status !== 0 && result.status !== 3) {
+          lastError = resolver.name + " returned " + friendlyDnsStatus(result.status) + ".";
+          continue;
+        }
         return { ...result, requestedType: type.name, error: null };
       } catch (error) {
         lastError = error && error.name === "AbortError"
