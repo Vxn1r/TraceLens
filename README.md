@@ -22,7 +22,7 @@
 
 TraceLens also includes a lightweight browser interface with a domain relationship map, point-in-time DNS comparisons, a local evidence vault, sourced notes, and Markdown/JSON exports.
 
-- **Web app:** [Open TraceLens](https://vxn1r.github.io/TraceLens/)
+- **Web app:** [Open TraceLens](https://vxn1r.github.io/tracelens/)
 - **Web app documentation:** [web/README.md](web/README.md)
 
 The web app is a static site with no account, server-side database, analytics beacon, external JavaScript library, or API key. Browser snapshots and notes remain in that browser's local storage. DNS requests are sent to Cloudflare DNS-over-HTTPS, with Google Public DNS as a fallback; those resolvers receive the domain being queried. Do not submit private or sensitive domains.
