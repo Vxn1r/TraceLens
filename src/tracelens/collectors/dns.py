@@ -1,4 +1,4 @@
-"""Bounded passive DNS collection using a system-configured resolver."""
+"""Bounded passive DNS collection with Android/Termux compatibility."""
 from __future__ import annotations
 
 import dns.exception
@@ -16,7 +16,21 @@ class DNSCollector:
         if timeout <= 0 or timeout > 10:
             raise ValueError("timeout must be greater than 0 and no more than 10 seconds")
         self.timeout = float(timeout)
-        self.resolver = resolver or dns.resolver.Resolver()
+
+        if resolver is not None:
+            self.resolver = resolver
+            self.resolver_source = "Injected DNS resolver"
+        else:
+            try:
+                self.resolver = dns.resolver.Resolver()
+                self.resolver_source = "System-configured DNS resolver"
+            except dns.resolver.NoResolverConfiguration:
+                # Android/Termux may not expose /etc/resolv.conf. Use public
+                # recursive resolvers only when system configuration is absent.
+                self.resolver = dns.resolver.Resolver(configure=False)
+                self.resolver.nameservers = ["1.1.1.1", "8.8.8.8"]
+                self.resolver_source = "Public fallback DNS resolver (Cloudflare/Google)"
+
         self.resolver.timeout = self.timeout
         self.resolver.lifetime = min(self.timeout * 3, 10.0)
 
@@ -38,7 +52,7 @@ class DNSCollector:
                             target=domain,
                             category=f"DNS {record_type}",
                             value=record.to_text(),
-                            source="System-configured DNS resolver",
+                            source=self.resolver_source,
                             method=f"DNS query: {record_type}",
                             confidence="observed",
                             note="Public DNS response; point-in-time observation.",
