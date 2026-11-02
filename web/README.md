@@ -31,8 +31,8 @@ The web interface does not enumerate subdomains, scan ports, probe services, att
 
 ## Deployment
 
-The repository's GitHub Actions Pages workflow publishes the contents of this directory to:
+The static assets are mirrored into the `tracelens/` directory of the already-published portfolio repository:
 
-`https://vxn1r.github.io/TraceLens/`
+`https://vxn1r.github.io/tracelens/`
 
-The first deployment may require GitHub Pages to be enabled for the repository with **GitHub Actions** as the deployment source.
+The source of truth remains this `web/` directory in the TraceLens repository. When making web app changes, copy the updated `index.html`, `styles.css`, `app.js`, and `favicon.svg` into the portfolio repository's `tracelens/` directory and commit them there.
